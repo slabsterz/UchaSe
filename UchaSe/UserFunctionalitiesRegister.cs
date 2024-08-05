@@ -12,6 +12,7 @@ namespace UchaSe
         protected readonly string _url = "https://ucha.se/";
         public string? _userEmail;
         public string? _password;
+        public string? _parentName;
 
         private HelperMethods _helper;
 
@@ -107,6 +108,8 @@ namespace UchaSe
                 Assert.True(inputUserPasswordField.Displayed);
                 Assert.True(continueButton.Displayed);
             });
+
+            this._parentName = parentName;
         }
 
         [Test, Order(6)]

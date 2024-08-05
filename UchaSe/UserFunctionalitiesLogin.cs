@@ -56,12 +56,11 @@ namespace UchaSe
         {
             string? email = _userRegister._userEmail;
             string? password = _userRegister._password;
+            string? registeredUserName = _userRegister._parentName;
 
             _driver.FindElement(By.XPath("//div[@id='field-email']//input")).SendKeys(email);
             _driver.FindElement(By.XPath("//div[@id='field-password']//input")).SendKeys(password);
-            _driver.FindElement(By.XPath("//input[@id='send_data']")).Click();
-
-            string registeredUserName = "ivaylo";
+            _driver.FindElement(By.XPath("//input[@id='send_data']")).Click();            
 
             var userLoginName = _driver.FindElement(By.XPath("//span[@id='username-sidebar']"));
 
