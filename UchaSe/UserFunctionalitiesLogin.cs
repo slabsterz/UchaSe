@@ -56,7 +56,7 @@ namespace UchaSe
             /* Option to add manually existing user data
              string email = "";
              string password = "";
-             string expectedUserName = "";
+             string registeredUserName = "";
             */
 
             _driver.FindElement(By.XPath("//div[@id='field-email']//input")).SendKeys(email);
