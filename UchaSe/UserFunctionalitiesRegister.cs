@@ -2,7 +2,6 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using System.Net;
 
 namespace UchaSe
 {
