@@ -29,5 +29,12 @@ namespace UchaSe
             string randomUser = $"user{random.Next(1, 9999)}";
             return randomUser;
         }
+
+        public string GenerateRandomPassword()
+        {
+            var random = new Random();
+            string password = $"password{random.Next(100,999)}";
+            return password;
+        }
     }
 }

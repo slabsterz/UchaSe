@@ -10,10 +10,11 @@ namespace UchaSe
     {
         private IWebDriver _driver;
         protected readonly string _url = "https://ucha.se/";
+        private string _userEmail;
 
         private HelperMethods _helper;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             _helper = new HelperMethods();
@@ -28,14 +29,14 @@ namespace UchaSe
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             _driver.Quit();
             _driver.Dispose();
         }
 
-        [Test]
+        [Test, Order(1)]
         public void UserNavigateTo_HomePage()
         {
             _driver.Navigate().GoToUrl(_url);
@@ -43,10 +44,9 @@ namespace UchaSe
             Assert.That(_driver.Url, Is.EqualTo(_url));
         }
 
-        [Test]
+        [Test, Order(2)]
         public void UserNavigateTo_RegiserPage()
         {
-            _driver.Navigate ().GoToUrl(_url);
             _driver.FindElement(By.XPath("//button[@class='btn btn-primary cookie-user-choice order-1 order-md-2 mt-2 mt-md-0']")).Click();  
 
             string registerPageUrl = "https://ucha.se/registration/";
@@ -59,14 +59,14 @@ namespace UchaSe
             Assert.That(welcomeMessage, Is.EqualTo("Стани част от Уча.се!"));
         }
 
-        [Test]
+        [Test, Order(3)]
         public void UserPickMascot_RegiserPage()
         {
-            _driver.Navigate().GoToUrl(_url);
-            _driver.FindElement(By.XPath("//button[@class='btn btn-primary cookie-user-choice order-1 order-md-2 mt-2 mt-md-0']")).Click();
+            //_driver.Navigate().GoToUrl(_url);
+            //_driver.FindElement(By.XPath("//button[@class='btn btn-primary cookie-user-choice order-1 order-md-2 mt-2 mt-md-0']")).Click();
 
-            var registerButton = _driver.FindElement(By.Id("register-top"));
-            registerButton.Click();
+            //var registerButton = _driver.FindElement(By.Id("register-top"));
+            //registerButton.Click();
             _driver.FindElement(By.XPath("//div[@data-kind='student']")).Click();
 
             Assert.True(_driver.Url != _url);
@@ -80,36 +80,69 @@ namespace UchaSe
             }); 
         }
 
-        [Test]
+        [Test, Order(4)]
         public void UserRegistration_WithEmail()
-        {
-            _driver.Navigate().GoToUrl(_url);
-            _driver.FindElement(By.XPath("//button[@class='btn btn-primary cookie-user-choice order-1 order-md-2 mt-2 mt-md-0']")).Click();
-
-            var registerButton = _driver.FindElement(By.Id("register-top"));
-            registerButton.Click();
-            _driver.FindElement(By.XPath("//div[@data-kind='student']")).Click();
-
+        {           
             _driver.FindElement(By.XPath("//button[@data-kind='student']")).Click();
-            
 
             var form = _driver.FindElement(By.Id("form-section"));
 
             Assert.True(form.Displayed);
 
-            string userEmail = _helper.GenerateRandomEmail();
-            string userPhoneNumber = _helper.GenerateRandomMobilePhone();
-            string randomUser = _helper.GenerateRandomUser();
+        }
 
-            _driver.FindElement(By.XPath("//input[@name='username']")).SendKeys(randomUser);
-            _driver.FindElement(By.Id("phone-number-value")).SendKeys(userPhoneNumber);
+        [Test, Order(5)]
+        public void UserRegistration_WithEmail_ParentContactInput()
+        {            
+            string parentPhoneNumber = _helper.GenerateRandomMobilePhone();
+            string parentName = _helper.GenerateRandomUser();
+
+            _driver.FindElement(By.XPath("//input[@name='username']")).SendKeys(parentName);
+            _driver.FindElement(By.Id("phone-number-value")).SendKeys(parentPhoneNumber);
             _driver.FindElement(By.Id("next")).Click();
+
+            var inputUserEmailField = _driver.FindElement(By.XPath("//input[@name='email']"));
+            var inputUserPasswordField = _driver.FindElement(By.Id("new-password"));
+            var continueButton = _driver.FindElement(By.Id("next"));
+
+            Assert.Multiple(() =>
+            {
+                Assert.True(inputUserEmailField.Displayed);
+                Assert.True(inputUserPasswordField.Displayed);
+                Assert.True(continueButton.Displayed);
+            });
+        }
+
+        [Test, Order(6)]
+        public void UserRegistration_WithEmail_StudentContactInput()
+        {
+            string userEmail = _helper.GenerateRandomEmail();
+            string userPassword = _helper.GenerateRandomPassword();
 
             _driver.FindElement(By.XPath("//input[@name='email']")).SendKeys(userEmail);
-            _driver.FindElement(By.Id("new-password")).SendKeys("password123");
-            _driver.FindElement(By.Id("new-password2")).SendKeys("password123");
+            _driver.FindElement(By.Id("new-password")).SendKeys(userPassword);
+            _driver.FindElement(By.Id("new-password2")).SendKeys(userPassword);
             _driver.FindElement(By.Id("next")).Click();
 
+            var gradeSelector = _driver.FindElement(By.XPath("//button[@data-id='grade-filter']"));
+            var citySelector = _driver.FindElement(By.XPath("//button[@data-id='city']"));
+            var schoolSelector = _driver.FindElement(By.XPath("//button[@data-id='school-filter']"));
+            var continueButton = _driver.FindElement(By.Id("send_data"));
+
+            Assert.Multiple(() =>
+            {
+                Assert.True(gradeSelector.Displayed);
+                Assert.True(citySelector.Displayed);
+                Assert.True(schoolSelector.Displayed);
+                Assert.True(continueButton.Displayed);
+            });
+
+            this._userEmail = userEmail;
+        }
+
+        [Test, Order(7)]
+        public void UserRegistration_WithEmail_StudentSchool()
+        {        
             //select grade
             _driver.FindElement(By.XPath("//button[@data-id='grade-filter']")).Click();
             _driver.FindElement(By.XPath("//*[@id=\"field-grade\"]/div/div/div[2]/a[1]/span/span[1]")).Click();
@@ -137,7 +170,7 @@ namespace UchaSe
 
             var confirmationText = _driver.FindElement(By.XPath("//div[@class='form-body']//div")).Text;
 
-            Assert.That(confirmationText, Does.Contain(userEmail));
+            Assert.That(confirmationText, Does.Contain(_userEmail));
         }
     }
 }
