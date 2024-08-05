@@ -58,6 +58,12 @@ namespace UchaSe
             string? password = _userRegister._password;
             string? registeredUserName = _userRegister._parentName;
 
+            /* Option to add manually existing user data
+             string email = "";
+             string password = "";
+             string expectedUserName = "";
+            */
+
             _driver.FindElement(By.XPath("//div[@id='field-email']//input")).SendKeys(email);
             _driver.FindElement(By.XPath("//div[@id='field-password']//input")).SendKeys(password);
             _driver.FindElement(By.XPath("//input[@id='send_data']")).Click();            
