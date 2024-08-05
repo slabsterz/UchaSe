@@ -10,7 +10,8 @@ namespace UchaSe
     {
         private IWebDriver _driver;
         protected readonly string _url = "https://ucha.se/";
-        private string _userEmail;
+        public readonly string? _userEmail;
+        public readonly string? _password;
 
         private HelperMethods _helper;
 
@@ -61,12 +62,7 @@ namespace UchaSe
 
         [Test, Order(3)]
         public void UserPickMascot_RegiserPage()
-        {
-            //_driver.Navigate().GoToUrl(_url);
-            //_driver.FindElement(By.XPath("//button[@class='btn btn-primary cookie-user-choice order-1 order-md-2 mt-2 mt-md-0']")).Click();
-
-            //var registerButton = _driver.FindElement(By.Id("register-top"));
-            //registerButton.Click();
+        {            
             _driver.FindElement(By.XPath("//div[@data-kind='student']")).Click();
 
             Assert.True(_driver.Url != _url);
@@ -138,16 +134,14 @@ namespace UchaSe
             });
 
             this._userEmail = userEmail;
+            this._password = userPassword;
         }
 
         [Test, Order(7)]
         public void UserRegistration_WithEmail_StudentSchool()
         {        
-            //select grade
             _driver.FindElement(By.XPath("//button[@data-id='grade-filter']")).Click();
             _driver.FindElement(By.XPath("//*[@id=\"field-grade\"]/div/div/div[2]/a[1]/span/span[1]")).Click();
-
-            //select city
             _driver.FindElement(By.XPath("//button[@data-id='city']")).Click();
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));           
@@ -155,7 +149,6 @@ namespace UchaSe
             var citySelect = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//*[@id=\"town\"]/div/div/div[2]/a[2]")));
             citySelect.Click();
 
-            //select school
             _driver.FindElement(By.XPath("//button[@data-id='school-filter']")).Click();
             _driver.FindElement(By.XPath("//*[@id=\"school\"]/div/div/div[2]/a[1]/span/span[1]")).Click();
 
