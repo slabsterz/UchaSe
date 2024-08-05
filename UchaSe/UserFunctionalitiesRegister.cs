@@ -6,10 +6,10 @@ using System.Net;
 
 namespace UchaSe
 {
-    public class UserFunctionalitiesTests
+    public class UserFunctionalitiesRegister
     {
         private IWebDriver _driver;
-        private readonly string _url = "https://ucha.se/";
+        protected readonly string _url = "https://ucha.se/";
 
         private HelperMethods _helper;
 
