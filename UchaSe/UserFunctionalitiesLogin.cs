@@ -12,6 +12,7 @@ namespace UchaSe
     {
         private IWebDriver _driver;
         protected readonly string _url = "https://ucha.se/";
+        private UserFunctionalitiesRegister _userRegister;
 
         private HelperMethods _helper;
 
@@ -19,6 +20,7 @@ namespace UchaSe
         public void Setup()
         {
             _helper = new HelperMethods();
+            _userRegister = new UserFunctionalitiesRegister();
 
             var options = new ChromeOptions();
             options.AddArguments("--disable-search-engine-choice-screen");
@@ -52,10 +54,11 @@ namespace UchaSe
         [Test, Order(2)]
         public void UserLogin_WithValidCredentials()
         {
-            //FIX USER DATA
+            string? email = _userRegister._userEmail;
+            string? password = _userRegister._password;
 
-            _driver.FindElement(By.XPath("//div[@id='field-email']//input")).SendKeys("ivaylodimitrov031@gmail.com");
-            _driver.FindElement(By.XPath("//div[@id='field-password']//input")).SendKeys("skateboard");
+            _driver.FindElement(By.XPath("//div[@id='field-email']//input")).SendKeys(email);
+            _driver.FindElement(By.XPath("//div[@id='field-password']//input")).SendKeys(password);
             _driver.FindElement(By.XPath("//input[@id='send_data']")).Click();
 
             string registeredUserName = "ivaylo";

@@ -10,8 +10,8 @@ namespace UchaSe
     {
         private IWebDriver _driver;
         protected readonly string _url = "https://ucha.se/";
-        public readonly string? _userEmail;
-        public readonly string? _password;
+        public string? _userEmail;
+        public string? _password;
 
         private HelperMethods _helper;
 
